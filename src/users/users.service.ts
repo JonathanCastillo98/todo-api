@@ -15,7 +15,7 @@ export class UsersService {
 
     public async registerUser(body: UserDTO): Promise<UsersEntity> {
         try {
-            const hashedPassword = await bcrypt.hash(body.password, process.env.HASH_SALT);
+            const hashedPassword = await bcrypt.hash(body.password, +process.env.HASH_SALT);
             body.password = hashedPassword;
             return await this.userRepository.save(body);
         } catch (error) {
