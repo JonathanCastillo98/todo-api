@@ -14,11 +14,13 @@ export class TasksService {
         private readonly usersService: UsersService,
     ) {}
 
-    public async createTask(body: TasksDTO, userId: string): Promise<TasksEntity> {
+    public async createTask(body: TasksDTO, userId: string): Promise<any> {
         try {   
-            const user = await this.usersService.findUserById(userId);
-            if(!user) throw new ErrorManager({ type: 'NOT_FOUND', message: 'User not found' });
-            return await this.tasksRepository.save({ ...body, user});
+            const usr = await this.usersService.findUserById(userId);
+            if(!usr) throw new ErrorManager({ type: 'NOT_FOUND', message: 'User not found' });
+            const task = await this.tasksRepository.save({ ...body, user: usr});
+            const {user, ...newTask} = task;            
+            return newTask;
         } catch (error) {
             throw ErrorManager.createSignatureError(error.message);
         }
