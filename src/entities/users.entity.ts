@@ -1,7 +1,8 @@
 import { IUser } from "../interfaces/user.interface";
 import { BaseEntity } from "./base.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { ROLES } from "../constants/roles";
+import { TasksEntity } from "./tasks.entity";
 
 @Entity({name: 'users'})
 export class UsersEntity extends BaseEntity implements IUser {
@@ -25,4 +26,7 @@ export class UsersEntity extends BaseEntity implements IUser {
 
     @Column({type: 'enum', enum: ROLES})
     role: string;
+
+    @OneToMany(() => TasksEntity, (task) => task.user)
+    tasks: TasksEntity[];
 }
