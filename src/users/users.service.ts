@@ -15,7 +15,7 @@ export class UsersService {
 
     public async registerUser(body: UserDTO): Promise<UsersEntity> {
         try {
-            const hashedPassword = await bcrypt.hash(body.password, 10);
+            const hashedPassword = await bcrypt.hash(body.password, process.env.HASH_SALT);
             body.password = hashedPassword;
             return await this.userRepository.save(body);
         } catch (error) {
@@ -47,7 +47,7 @@ export class UsersService {
    
     public async findUserById(userId: string): Promise<UsersEntity> {
         try {
-            const user = await this.userRepository.createQueryBuilder('user').where({ id: userId }).getOne();
+            const user = await this.userRepository.createQueryBuilder('user').where({ id: userId }).leftJoinAndSelect('user.tasks', 'tasks').getOne();
             if(!user) throw new ErrorManager({ type: 'NOT_FOUND', message: 'User not found' });
             return user;
         } catch (error) {
