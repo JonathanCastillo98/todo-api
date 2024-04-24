@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  todo_db:
+    image: postgres
+    container_name: todo_db
+    restart: always
+    environment:
+      POSTGRES_USER: utodo
+      POSTGRES_PASSWORD: todo123
+      POSTGRES_DB: tododb
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    
